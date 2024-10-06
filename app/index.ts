@@ -1,43 +1,55 @@
-import express, { Express, Request, Response } from "express";
+import express, { Request, Response } from "express";
 import cors, { CorsOptions } from "cors";
-import mongoose from "mongoose";
+import bcrypt from "bcrypt";
+import User from "./models/user";
 
-export const app: Express = express();
+export const app = express();
 const corsOptions: CorsOptions = {
     origin: "*",
 };
 
-const albumSchema = new mongoose.Schema({
-    title: String,
-    artist: String,
-});
-const Album = mongoose.model("Album", albumSchema);
-
 app.use(express.json());
 app.use(cors(corsOptions));
 
-app.get("/test", async (req: Request, res: Response) => {
-    const albums = await Album.find();
-    if (albums) {
-        res.json(albums);
-    } else {
-        res.status(404).send({ message: "Error finding all albums" });
+app.post("/signup", async (req: Request, res: Response) => {
+    try {
+        const { username, email, password } = req.body;
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const newUser = await User.create({
+            username,
+            email,
+            password: hashedPassword,
+        });
+
+        res.status(201).json({
+            message: "User successfully registered",
+            user: newUser,
+        });
+    } catch (error) {
+        res.status(500).send(error);
     }
 });
 
-app.post("/test", async (req: Request, res: Response) => {
-    const newAlbum = { ...req.body };
-    await Album.create(newAlbum);
-    res.status(201).send({ message: "Successfully created album:", newAlbum });
-});
+app.post("/login", async (req: Request, res: Response) => {
+    try {
+        const { email, password } = req.body;
 
-app.get("/test/:id", async (req: Request, res: Response) => {
-    const id = req.params.id;
-    const album = await Album.findById(id);
-    if (album) {
-        res.status(200).send(album);
-    } else {
-        res.status(404).send({ message: "Error finding album" });
+        const user = await User.findOne({ email });
+        if (!user || !user.password) {
+            return res.status(401).json({ error: "Authentication failed" });
+        }
+
+        const passwordMatch = await bcrypt.compare(password, user.password);
+        if (!passwordMatch) {
+            return res.status(401).json({ error: "Authentication failed" });
+        }
+
+        return res
+            .status(200)
+            .json({ message: "User logged in", userId: user._id });
+    } catch (error) {
+        return res.status(500).json({ error: "Internal server error" });
     }
 });
 
