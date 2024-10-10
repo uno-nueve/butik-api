@@ -1,18 +1,15 @@
 import { app } from "./app";
-import mongoose from "mongoose";
+import connectDB from "./config/db";
 import { config } from "dotenv";
 config();
 
 const PORT = process.env.PORT || 3000;
 const HOST = process.env.HOST || "localhost";
-const MONGO_URL = process.env.MONGO_URL;
 
-mongoose
-    .connect(MONGO_URL!)
+connectDB()
     .then(() => {
-        console.log("connected to database");
         app.listen(PORT, () => {
             console.log(`Server running on port: http://${HOST}:${PORT}`);
         });
     })
-    .catch((error) => console.error("connection", error));
+    .catch((error) => console.error("Error initializing server", error));
