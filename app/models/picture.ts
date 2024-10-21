@@ -16,6 +16,6 @@ const PictureSchema = new mongoose.Schema(
     { timestamps: true }
 );
 
-const Picture = mongoose.model("picture", PictureSchema);
+const Picture = mongoose.model("pictures", PictureSchema);
 
 export default Picture;
