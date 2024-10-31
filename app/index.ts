@@ -1,6 +1,7 @@
 import express, { Request, Response } from "express";
 import cors, { CorsOptions } from "cors";
 import authRouter from "./routes/auth-router";
+import productsRouter from "./routes/products";
 
 export const app = express();
 const corsOptions: CorsOptions = {
@@ -10,7 +11,8 @@ const corsOptions: CorsOptions = {
 app.use(express.json());
 app.use(cors(corsOptions));
 
-app.use("/", authRouter);
+app.use("/api", authRouter);
+app.use("/api", productsRouter);
 
 app.all("*", (req: Request, res: Response) => {
     res.status(404).json({ error: `Route ${req.originalUrl} not found` });
