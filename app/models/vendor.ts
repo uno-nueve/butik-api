@@ -2,12 +2,9 @@ import mongoose from "mongoose";
 
 const VendorSchema = new mongoose.Schema(
     {
-        fullName: {
-            type: String,
-            required: true,
-        },
-        storeName: {
-            type: String,
+        user: {
+            type: mongoose.Types.ObjectId,
+            ref: "User",
             required: true,
         },
         cuil: {
@@ -33,6 +30,7 @@ const VendorSchema = new mongoose.Schema(
             default: "free",
         },
         paymentMethods: [],
+        links: [],
     },
     {
         timestamps: true,
