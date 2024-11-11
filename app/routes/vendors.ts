@@ -53,7 +53,7 @@ router.put("/vendors/:id", async (req: Request, res: Response) => {
 
         res.status(200).send(updatedVendor);
     } catch (error) {
-        res.status(400).send({ message: "Error updating vendor" });
+        res.status(400).send({ message: "Error updating vendor", error });
     }
 });
 
@@ -67,7 +67,7 @@ router.delete("/vendors/:id", async (req: Request, res: Response) => {
 
         res.status(200).send({ message: "Vendor successfully deleted" });
     } catch (error) {
-        res.status(500).send({ message: "Error deleting vendor" });
+        res.status(500).send({ message: "Error deleting vendor", error });
     }
 });
 
