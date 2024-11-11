@@ -32,7 +32,10 @@ router.get("/users/:id", async (req: Request, res: Response) => {
 //UPDATE a single user record by ID
 router.put("/users/:id", async (req: Request, res: Response) => {
     try {
-        const updatedUser = await User.findByIdAndUpdate(req.params.id);
+        const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, {
+            new: true,
+            runValidators: true,
+        });
         if (!updatedUser) {
             return res.status(404).send({ message: "User not found" });
         }
