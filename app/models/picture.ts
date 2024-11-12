@@ -1,6 +1,12 @@
 import mongoose from "mongoose";
 
-const PictureSchema = new mongoose.Schema(
+interface IPicture {
+    url: string;
+    height: number;
+    width: number;
+}
+
+const PictureSchema = new mongoose.Schema<IPicture>(
     {
         url: {
             type: String,
@@ -16,6 +22,6 @@ const PictureSchema = new mongoose.Schema(
     { timestamps: true }
 );
 
-const Picture = mongoose.model("pictures", PictureSchema);
+const Picture = mongoose.model<IPicture>("pictures", PictureSchema);
 
 export default Picture;

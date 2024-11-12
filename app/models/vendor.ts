@@ -1,6 +1,17 @@
 import mongoose from "mongoose";
 
-const VendorSchema = new mongoose.Schema(
+interface IVendor {
+    user: mongoose.Types.ObjectId | undefined;
+    cuil: string;
+    address?: string;
+    telephone: string;
+    catalog: Array<mongoose.Types.ObjectId>;
+    accountTier?: string;
+    paymentMethods?: Array<any>;
+    links?: Array<string>;
+}
+
+const VendorSchema = new mongoose.Schema<IVendor>(
     {
         user: {
             type: mongoose.Types.ObjectId,
@@ -37,6 +48,6 @@ const VendorSchema = new mongoose.Schema(
     }
 );
 
-const Vendor = mongoose.model("vendors", VendorSchema);
+const Vendor = mongoose.model<IVendor>("vendors", VendorSchema);
 
 export default Vendor;

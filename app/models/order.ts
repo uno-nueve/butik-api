@@ -1,6 +1,16 @@
 import mongoose from "mongoose";
 
-const OrderSchema = new mongoose.Schema({
+interface IOrder {
+    customer: mongoose.Types.ObjectId | undefined;
+    vendor: mongoose.Types.ObjectId | undefined;
+    product: mongoose.Types.ObjectId | undefined;
+    status?: string;
+    confirmationCode?: string;
+    issueDate: Date;
+    duebyDate: Date;
+}
+
+const OrderSchema = new mongoose.Schema<IOrder>({
     customer: {
         type: mongoose.Types.ObjectId,
         ref: "Customer",
@@ -32,6 +42,6 @@ const OrderSchema = new mongoose.Schema({
     },
 });
 
-const Order = mongoose.model("orders", OrderSchema);
+const Order = mongoose.model<IOrder>("orders", OrderSchema);
 
 export default Order;

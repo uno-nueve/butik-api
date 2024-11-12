@@ -1,18 +1,27 @@
 import mongoose from "mongoose";
 
-const CustomerSchema = new mongoose.Schema(
+interface ICustomer {
+    user: mongoose.Types.ObjectId | undefined;
+    dni: string;
+    address: string;
+    telephone: string;
+    purchases: Array<mongoose.Types.ObjectId>;
+    paymentMethods: Array<any>;
+}
+
+const CustomerSchema = new mongoose.Schema<ICustomer>(
     {
-        fullName: {
-            type: String,
+        user: {
+            type: mongoose.Types.ObjectId,
+            ref: "User",
             required: true,
         },
         dni: {
             type: String,
             required: true,
         },
-        email: {
+        address: {
             type: String,
-            required: true,
         },
         telephone: {
             type: String,
@@ -31,6 +40,6 @@ const CustomerSchema = new mongoose.Schema(
     }
 );
 
-const Customer = mongoose.model("customers", CustomerSchema);
+const Customer = mongoose.model<ICustomer>("customers", CustomerSchema);
 
 export default Customer;
